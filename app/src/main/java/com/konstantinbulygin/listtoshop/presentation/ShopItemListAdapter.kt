@@ -1,42 +1,20 @@
 package com.konstantinbulygin.listtoshop.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.konstantinbulygin.listtoshop.R
 import com.konstantinbulygin.listtoshop.domain.ShopItem
 
-class ShopItemListAdapter : RecyclerView.Adapter<ShopItemListAdapter.ShopItemViewHolder>() {
-
-    var shopItemList = listOf<ShopItem>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+class ShopItemListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallback()) {
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
-    class ShopItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvName: TextView = view.findViewById(R.id.tv_name)
-        val tvCount: TextView = view.findViewById(R.id.tv_count)
-    }
-
     companion object {
-        const val VIEW_TYPE_ENABLED = 1;
-        const val VIEW_TYPE_DISABLED = 0;
-        const val VIEW_HOLDER_MAX_POOL_SIZE = 20;
-    }
-
-    interface OnShopItemLongClickListener {
-        fun onShopItemLongClick(shopItem: ShopItem)
-    }
-
-    interface OnShopItemClickListener {
-        fun onShopItemClick(shopItem: ShopItem)
+        const val VIEW_TYPE_ENABLED = 1
+        const val VIEW_TYPE_DISABLED = 0
+        const val VIEW_HOLDER_MAX_POOL_SIZE = 20
     }
 
 
@@ -53,7 +31,7 @@ class ShopItemListAdapter : RecyclerView.Adapter<ShopItemListAdapter.ShopItemVie
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
-        val shopItem = shopItemList[position]
+        val shopItem = getItem(position)
 
         holder.itemView.setOnLongClickListener {
             onShopItemLongClickListener?.invoke(shopItem)
@@ -69,27 +47,11 @@ class ShopItemListAdapter : RecyclerView.Adapter<ShopItemListAdapter.ShopItemVie
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item = shopItemList[position]
+        val item = getItem(position)
         return if (item.isEnable) {
             VIEW_TYPE_ENABLED
         } else {
             VIEW_TYPE_DISABLED
         }
-    }
-
-    override fun onViewRecycled(viewHolder: ShopItemViewHolder) {
-        super.onViewRecycled(viewHolder)
-        viewHolder.tvName.text = ""
-        viewHolder.tvCount.text = ""
-        viewHolder.tvName.setTextColor(
-            ContextCompat.getColor(
-                viewHolder.itemView.context,
-                android.R.color.white
-            )
-        )
-    }
-
-    override fun getItemCount(): Int {
-        return shopItemList.size
     }
 }
