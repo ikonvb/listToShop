@@ -1,6 +1,5 @@
 package com.konstantinbulygin.listtoshop.presentation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.konstantinbulygin.listtoshop.data.ShopListRepositoryImpl
 import com.konstantinbulygin.listtoshop.domain.DelShopItemUseCase
