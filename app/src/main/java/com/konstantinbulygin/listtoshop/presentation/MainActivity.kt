@@ -1,12 +1,14 @@
 package com.konstantinbulygin.listtoshop.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.konstantinbulygin.listtoshop.R
+import com.konstantinbulygin.listtoshop.presentation.ShopItemActivity.Companion.newIntentAdd
+import com.konstantinbulygin.listtoshop.presentation.ShopItemActivity.Companion.newIntentEdit
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +23,11 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
             shopItemListAdapter.submitList(it)
-            Log.d("MainActivityT", it.toString())
+        }
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
+        buttonAddItem.setOnClickListener {
+            val intent = newIntentAdd(this)
+            startActivity(intent)
         }
     }
 
@@ -67,7 +73,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         shopItemListAdapter.onShopItemClickListener = {
-            Log.d("MainActivity", it.toString())
+            val intent = newIntentEdit(this, it.id)
+            startActivity(intent)
         }
     }
 
@@ -76,4 +83,6 @@ class MainActivity : AppCompatActivity() {
             viewModel.changeEnableState(it)
         }
     }
+
+
 }
