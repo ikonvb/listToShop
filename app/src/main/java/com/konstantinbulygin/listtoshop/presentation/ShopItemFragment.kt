@@ -47,7 +47,6 @@ class ShopItemFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseParams()
-
     }
 
     private fun observeViewModelObject() {
@@ -132,9 +131,7 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun parseParams() {
-
         val args = requireArguments()
-
         if (!args.containsKey(SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")
         }
