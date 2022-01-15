@@ -16,7 +16,6 @@ import com.konstantinbulygin.listtoshop.domain.ShopItem
 
 class ShopItemFragment : Fragment() {
 
-
     private lateinit var viewModel: ShopItemViewModel
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
