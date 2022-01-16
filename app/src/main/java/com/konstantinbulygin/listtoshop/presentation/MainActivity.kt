@@ -1,6 +1,7 @@
 package com.konstantinbulygin.listtoshop.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -11,9 +12,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.konstantinbulygin.listtoshop.R
 import com.konstantinbulygin.listtoshop.presentation.ShopItemActivity.Companion.newIntentAdd
 import com.konstantinbulygin.listtoshop.presentation.ShopItemActivity.Companion.newIntentEdit
+import com.konstantinbulygin.listtoshop.presentation.ShopItemFragment.OnEditingFinishedListener
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopItemListAdapter: ShopItemListAdapter
@@ -35,7 +37,8 @@ class MainActivity : AppCompatActivity() {
                 val intent = newIntentAdd(this)
                 startActivity(intent)
             } else {
-                launchFragment(ShopItemFragment.newInstanceAddItem())
+                val fragment = ShopItemFragment.newInstanceAddItem()
+                launchFragment(fragment)
             }
         }
     }
@@ -106,5 +109,10 @@ class MainActivity : AppCompatActivity() {
         shopItemListAdapter.onShopItemLongClickListener = {
             viewModel.changeEnableState(it)
         }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 }
