@@ -5,4 +5,5 @@
     <string name="count_hint">Count:</string>
     <string name="save_btn">Save</string>
     <string name="error_input_count">error_input_count</string>
+    <string name="error_input_name">error_input_name</string>
 </resources>
