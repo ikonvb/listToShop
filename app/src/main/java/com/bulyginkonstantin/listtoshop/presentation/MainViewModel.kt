@@ -1,38 +1,29 @@
 package com.bulyginkonstantin.listtoshop.presentation
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import com.bulyginkonstantin.listtoshop.data.ShopListRepositoryImpl
 import com.bulyginkonstantin.listtoshop.domain.DeleteShopItemUseCase
 import com.bulyginkonstantin.listtoshop.domain.EditShopItemUseCase
 import com.bulyginkonstantin.listtoshop.domain.GetShopListUseCase
 import com.bulyginkonstantin.listtoshop.domain.ShopItem
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val shopListRepository = ShopListRepositoryImpl
+    private val repository = ShopListRepositoryImpl(application)
 
-    //temp functionality
-    val shopList = MutableLiveData<List<ShopItem>>()
+    private val getShopListUseCase = GetShopListUseCase(repository)
+    private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
+    private val editShopItemUseCase = EditShopItemUseCase(repository)
 
-    private val getShopListUseCase = GetShopListUseCase(shopListRepository);
-    private val deleteShopItemUseCase = DeleteShopItemUseCase(shopListRepository);
-    private val editShopItemUseCase = EditShopItemUseCase(shopListRepository);
-
-    fun getShopList() {
-        val list = getShopListUseCase.getShopList()
-        shopList.value = list
-    }
+    val shopList = getShopListUseCase.getShopList()
 
     fun deleteShopItem(shopItem: ShopItem) {
         deleteShopItemUseCase.deleteShopItem(shopItem)
-        getShopList()
     }
 
     fun changeEnableState(shopItem: ShopItem) {
-        val newItem = shopItem.copy(isEnable = !shopItem.isEnable)
+        val newItem = shopItem.copy(enabled = !shopItem.enabled)
         editShopItemUseCase.editShopItem(newItem)
-        getShopList()
     }
-
 }

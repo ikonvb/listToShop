@@ -9,7 +9,5 @@ data class ShopItemDbModel(
     val id: Int,
     val name: String,
     val count: Int,
-    val isEnable: Boolean
-) {
-
-}
+    val enabled: Boolean
+)

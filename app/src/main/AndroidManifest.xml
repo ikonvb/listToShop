@@ -8,12 +8,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Listtoshop">
+        android:theme="@style/Theme.ShoppingList">
+        <activity android:name=".presentation.ShopItemActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Listtoshop.NoActionBar">
+            android:theme="@style/Theme.ShoppingList">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,3 +25,5 @@
     </application>
 
 </manifest>
+
+

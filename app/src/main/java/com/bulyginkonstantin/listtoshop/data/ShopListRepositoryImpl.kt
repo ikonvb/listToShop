@@ -1,49 +1,38 @@
 package com.bulyginkonstantin.listtoshop.data
 
+import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.bulyginkonstantin.listtoshop.domain.ShopItem
 import com.bulyginkonstantin.listtoshop.domain.ShopListRepository
-import java.lang.RuntimeException
 
-object ShopListRepositoryImpl : ShopListRepository {
+class ShopListRepositoryImpl(
+    application: Application
+) : ShopListRepository {
 
-    //mocking structure
-    private val shopList = mutableListOf<ShopItem>();
-    private var autoIncrementId = 0
-
-    init {
-        for (i in 0 until 10) {
-            val item = ShopItem("Name $i", i, true)
-            addShopItem(item)
-        }
-    }
+    private val shopListDao = AppDatabase.getInstance(application).shopListDao()
+    private val mapper = ShopListMapper()
 
     override fun addShopItem(shopItem: ShopItem) {
-        if (shopItem.id == ShopItem.UNDEFINED_ID) {
-            shopItem.id = autoIncrementId++
-        }
-
-        shopList.add(shopItem)
+        shopListDao.addShopItem(mapper.mapEntityToDbModel(shopItem))
     }
 
     override fun deleteShopItem(shopItem: ShopItem) {
-        shopList.remove(shopItem)
+        shopListDao.deleteShopItem(shopItem.id)
     }
 
     override fun editShopItem(shopItem: ShopItem) {
-        val oldElem = getShopItem(shopItem.id)
-        shopList.remove(oldElem)
-        addShopItem(shopItem)
+        shopListDao.addShopItem(mapper.mapEntityToDbModel(shopItem))
     }
 
     override fun getShopItem(shopItemId: Int): ShopItem {
-        return shopList.find {
-            it.id == shopItemId
-        } ?: throw RuntimeException("Element with id $shopItemId not found")
+        val dbModel = shopListDao.getShopItem(shopItemId)
+        return mapper.mapDbModelToEntity(dbModel)
     }
 
-    override fun getShopList(): List<ShopItem> {
-        return shopList.toList()
+    override fun getShopList(): LiveData<List<ShopItem>> = Transformations.map(
+        shopListDao.getShopList()
+    ) {
+        mapper.mapListDbModelToListEntity(it)
     }
-
-
 }
