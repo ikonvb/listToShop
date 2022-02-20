@@ -2,11 +2,13 @@ package com.bulyginkonstantin.listtoshop.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.bulyginkonstantin.listtoshop.data.ShopListRepositoryImpl
 import com.bulyginkonstantin.listtoshop.domain.DeleteShopItemUseCase
 import com.bulyginkonstantin.listtoshop.domain.EditShopItemUseCase
 import com.bulyginkonstantin.listtoshop.domain.GetShopListUseCase
 import com.bulyginkonstantin.listtoshop.domain.ShopItem
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -19,11 +21,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val shopList = getShopListUseCase.getShopList()
 
     fun deleteShopItem(shopItem: ShopItem) {
-        deleteShopItemUseCase.deleteShopItem(shopItem)
+        viewModelScope.launch {
+            deleteShopItemUseCase.deleteShopItem(shopItem)
+        }
     }
 
     fun changeEnableState(shopItem: ShopItem) {
-        val newItem = shopItem.copy(enabled = !shopItem.enabled)
-        editShopItemUseCase.editShopItem(newItem)
+        viewModelScope.launch {
+            val newItem = shopItem.copy(enabled = !shopItem.enabled)
+            editShopItemUseCase.editShopItem(newItem)
+        }
     }
 }
